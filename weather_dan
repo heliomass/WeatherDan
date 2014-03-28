@@ -116,7 +116,7 @@ if [ -z $WOEID ]; then
 	arg_error=1
 fi
 if [ $DISPLAY_WEATHER -eq 0 -a $DISPLAY_TEMPERATURE -eq 0 ]; then
-	echo 'Please supply --display_temperature and/or --display weather.' >&2
+	echo 'Please supply --display_temperature and/or --display_weather.' >&2
 	arg_error=1
 fi
 if [ "$TEMPERATURE_SCALE" != "c" -a "$TEMPERATURE_SCALE" != "f" ]; then
