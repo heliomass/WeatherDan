@@ -103,7 +103,7 @@ while [ $# -gt 0 ]; do
 			exit 0
 			;;
 		*)
-			echo "Unrecognised paramter ${1}. Please use the --help switch to see usage."
+			echo "Unrecognised paramter ${1}. Please use the --help switch to see usage." >&2
 			exit 1
 			;;
 	esac
@@ -125,7 +125,7 @@ if [ "$TEMPERATURE_SCALE" != "c" -a "$TEMPERATURE_SCALE" != "f" ]; then
 fi
 
 if [ $arg_error -eq 1 ]; then
-	echo 'Use --help to display info on all the possible arguments.'
+	echo 'Use --help to display info on all the possible arguments.' >&2
 	exit 1
 fi
 
