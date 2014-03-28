@@ -31,8 +31,8 @@ weather_dan --woeid 44418 --display_temperature
 
 Display the complete weather and temperature in Fahrenheit in New York City:
 
-weather_dan --woeid 2459115 --display_weather --display_temperature --display_temperature_unit
-☾ 4°C
+weather_dan --woeid 2459115 --display_weather --display_temperature --display_temperature_unit --temperature_scale f
+☾ 40°F
 
 
 Get the woeid for your city from:
