@@ -1,0 +1,325 @@
+#!/bin/bash
+#
+# WeatherDan v1.0
+# By Daniel Demby
+# heliomass@gmail.com
+# http://heliomass.com
+#
+# Feel free to modify and improve this script. Drop me an email if you do anything cool with it :)
+#
+# API description is at: http://developer.yahoo.com/weather
+#
+
+# Don't change these!
+export VERSION='1.0';                     # Script version
+export MKTEMP_CMD='mktemp';               # Different platforms have different syntax for mktemp
+export STAT_EPOCH_CMD='stat -c "%Y"';     # Different platforms have different syntax for stat
+
+# Default the command arguments
+export WOEID=;                            # Get your WOEID from http://isithackday.com/geoplanet-explorer
+export CACHE_TIME=900;                    # Number of seconds to cache the weather
+export WEATHER_FILE="$HOME/.weather_dan"; # Location to cache the temperature
+export TEMPERATURE_SCALE='c';             # Either c or f
+export DISPLAY_WEATHER=0;                 # Display the weather
+export DISPLAY_TEMPERATURE=0              # Display the temperature
+export DISPLAY_TEMPERATURE_UNIT=0;        # 1 = show, 0 = don't show
+export CLEAR_CACHE=0;                     # Clear the cached weather when running
+
+# Help
+function display_help() {
+
+	echo ''
+	echo "WeatherDan v${VERSION}"
+	echo ''
+	echo "--woeid (compulsory argument)"
+	echo '   The woeid corresponding to the city you want to show the weather for.'
+	echo '   (visit http://isithackday.com/geoplanet-explorer to discover the one for your city)'
+	echo ''
+	echo "--cache_time (Defualt: $CACHE_TIME)"
+	echo '   How long to cache the weather report for in seconds.'
+	echo ''
+	echo "--weather_file (Default: $WEATHER_FILE)"
+	echo '   Location for the cache file.'
+	echo ''
+	echo "--temperature_scale (must be c or f. Default is $TEMPERATURE_SCALE)"
+	echo '   Whether to display in Celsius (c) or Fahrenheit (f)'
+	echo ''
+	echo "--display_weather"
+	echo '   Show the weather?'
+	echo ''
+	echo "--display_temperature"
+	echo '   Show the temperature?'
+	echo ''
+	echo "--display_temperature_unit"
+	echo '   Show the temperature unit along with the temperature?'
+	echo ''
+	echo "--clear_cache"
+	echo '   Force an update from Yahoo! Weather.'
+	echo ''
+	echo "--help"
+	echo '   Display this help screen.'
+	echo ''
+
+}
+
+
+# Parse command arguments
+while [ $# -gt 0 ]; do
+	case "$1" in
+		--woeid)
+			WOEID=$2
+			shift 2
+			;;
+		--cache_time)
+			CACHE_TIME=$2
+			shift 2
+			;;
+		--weather_file)
+			WEATHER_FILE=$2
+			shift 2
+			;;
+		--temperature_scale)
+			TEMPERATURE_SCALE=$2
+			shift 2
+			;;
+		--display_weather)
+			DISPLAY_WEATHER=1
+			shift
+			;;
+		--display_temperature)
+			DISPLAY_TEMPERATURE=1
+			shift
+			;;
+		--display_temperature_unit)
+			DISPLAY_TEMPERATURE_UNIT=1
+			shift
+			;;
+		--clear_cache)
+			CLEAR_CACHE=1
+			shift
+			;;
+		--help|-h|-?)
+			display_help
+			exit 0
+			;;
+		*)
+			echo "Unrecognised paramter ${1}. Please use the --help switch to see usage."
+			exit 1
+			;;
+	esac
+done
+
+# Check all paramters were supplied.
+arg_error=0
+if [ -z $WOEID ]; then
+	echo 'Please supply --woeid (You can get your woeid from http://isithackday.com/geoplanet-explorer)' >&2
+	arg_error=1
+fi
+if [ $DISPLAY_WEATHER -eq 0 -a $DISPLAY_TEMPERATURE -eq 0 ]; then
+	echo 'Please supply --display_temperature and/or --display weather.' >&2
+	arg_error=1
+fi
+if [ "$TEMPERATURE_SCALE" != "c" -a "$TEMPERATURE_SCALE" != "f" ]; then
+	echo '--temperature scale must be either "c" or "f" (case sensitive)' >&2
+	arg_error=1
+fi
+
+if [ $arg_error -eq 1 ]; then
+	echo 'Use --help to display info on all the possible arguments.'
+	exit 1
+fi
+
+if [ $CLEAR_CACHE -eq 1 ]; then
+	rm $WEATHER_FILE
+fi
+
+# Dependencies
+function check_deps() {
+
+	local __missing_dep=0
+
+	if [ -z "$(which wget)" ]; then
+		echo 'Missing wget.' >&2
+		__missing_dep=1
+	fi
+
+	return $__missing_dep
+
+}
+
+# Choose the correct commands for non-standard platforms
+function get_platform_cmds() {
+
+	# Mac
+	if [ $(uname) == 'Darwin' ]; then
+		MKTEMP_CMD="mktemp ${TMPDIR}tmp.XXXXXXXXXX"
+		STAT_EPOCH_CMD='stat -f "%m"'
+	fi
+
+}
+
+# Get the weather
+function get_weather() {
+
+	# Return variables
+	local __return_temperature=$1
+	local __return_weather_code=$2
+
+	# Procedure variables
+	local __weather_data=$($MKTEMP_CMD)
+	local __current_temp=
+	local __current_weather=
+
+	# Hit the Yahoo! Weather API.
+	wget "http://weather.yahooapis.com/forecastrss?w=${WOEID}&u=${TEMPERATURE_SCALE}" -O $__weather_data > /dev/null 2>&1
+
+	# Extract the temperature
+	__current_temp=$(cat $__weather_data | grep 'yweather:condition' | sed 's/^.*temp="//' | sed 's/".*$//')
+
+	# Extract the current weather conditions
+	__current_weather=$(cat $__weather_data | grep 'yweather:condition' | sed 's/^.*code="//' | sed 's/".*$//')
+
+	eval $__return_temperature="'$__current_temp'"
+	eval $__return_weather_code="'$__current_weather'"
+
+}
+
+# Change the weather_code into a pretty icon
+# (if you have an extended character set on your machine, you can
+# update the weather icons to use more emoji characters!)
+function get_weather_image() {
+
+	# Input arguments
+	local __weather_code=$1
+
+	# Return variables
+	local __return_weather_icon=$2
+
+	# Procedure variables
+	local __weather_icon=
+
+	case "$__weather_code" in
+		0) __weather_icon='⚠';;    # tornado
+		1) __weather_icon='⚠';;    # tropical storm
+		2) __weather_icon='⚠';;    # hurricane
+		3) __weather_icon='⚠';;    # severe thunderstorms
+		4) __weather_icon='☂';;    # thunderstorms
+		5) __weather_icon='☂';;    # mixed rain and snow
+		6) __weather_icon='☂';;    # mixed rain and sleet
+		7) __weather_icon='☂';;    # mixed snow and sleet
+		8) __weather_icon='☂';;    # freezing drizzle
+		9) __weather_icon='☂';;    # drizzle
+		10) __weather_icon='☂';;   # freezing rain
+		11) __weather_icon='☂';;   # showers
+		12) __weather_icon='☂';;   # showers
+		13) __weather_icon='☃';;   # snow flurries
+		14) __weather_icon='☃';;   # light snow showers
+		15) __weather_icon='☃';;   # blowing snow
+		16) __weather_icon='☃';;   # snow
+		17) __weather_icon='⚠';;   # hail
+		18) __weather_icon='⚠';;   # sleet
+		19) __weather_icon='☁';;   # dust
+		20) __weather_icon='☁';;   # foggy
+		21) __weather_icon='☁';;   # haze
+		22) __weather_icon='☁';;   # smoky
+		23) __weather_icon='☁';;   # blustery
+		24) __weather_icon='☁';;   # windy
+		25) __weather_icon='⚠';;   # cold
+		26) __weather_icon='☁';;   # cloudy
+		27) __weather_icon='⚠';;   # mostly cloudy (night)
+		28) __weather_icon='☁';;   # mostly cloudy (day)
+		29) __weather_icon='☁';;   # partly cloudy (night)
+		30) __weather_icon='☁';;   # partly cloudy (day)
+		31) __weather_icon='☾';;   # clear (night)
+		32) __weather_icon='☼';;   # sunny
+		33) __weather_icon='☾';;   # fair (night)
+		34) __weather_icon='☼';;   # fair (day)
+		35) __weather_icon='☂';;   # mixed rain and hail
+		36) __weather_icon='☼';;   # hot
+		37) __weather_icon='☂';;   # isolated thunderstorms
+		38) __weather_icon='☂';;   # scattered thunderstorms
+		39) __weather_icon='☂';;   # scattered thunderstorms
+		40) __weather_icon='☂';;   # scattered showers
+		41) __weather_icon='☃';;   # heavy snow
+		42) __weather_icon='☃';;   # scattered snow showers
+		43) __weather_icon='☃';;   # heavy snow
+		44) __weather_icon='☁';;   # partly cloudy
+		45) __weather_icon='☂';;   # thundershowers
+		46) __weather_icon='☃';;   # snow showers
+		47) __weather_icon='☂';;   # isolated thundershowers
+		3200) __weather_icon='?';; # not available
+		*) __weather_icon='?';;    # unknown
+	esac
+
+	eval $__return_weather_icon="'$__weather_icon'"
+
+}
+
+# Manage the file
+function manage_weather_file() {
+
+	local __file=$1
+	local __time_difference=$2
+
+	local __file_epoch=
+	local __current_epoch=
+	local __trigger_time=
+
+	# Update if no file exists
+	if [ ! -f "$__file" ]; then
+		echo -n '?' > $__file
+		return 1
+	fi
+
+	__file_epoch=$(eval $STAT_EPOCH_CMD $__file)
+	__current_epoch=$(date +%s)
+	__trigger_time=$(expr $__file_epoch + $__time_difference)
+
+	if [ $__current_epoch -gt $__trigger_time ]; then
+		return 1
+	fi
+
+	return 0
+
+}
+
+check_deps
+if [ $? -ne 0 ]; then
+	echo 'Please install missing dependencies.' >&2
+	exit 1
+fi
+
+get_platform_cmds
+
+manage_weather_file "$WEATHER_FILE" $CACHE_TIME
+if [ $? -eq 1 ]; then
+	get_weather temperature weather_code
+	get_weather_image $weather_code weather_icon
+	if [ -n "$temperature" ]; then
+		weather_info=""
+		if [ $DISPLAY_WEATHER -eq 1 ]; then
+			weather_info=$weather_icon
+			if [ $DISPLAY_TEMPERATURE -eq 1 ]; then
+				weather_info="${weather_info} "
+			fi
+		fi
+		if [ $DISPLAY_TEMPERATURE -eq 1 ]; then
+			weather_info="${weather_info}${temperature}"
+			if [ $DISPLAY_TEMPERATURE_UNIT -eq 1 ]; then
+				if [ "$TEMPERATURE_SCALE" == "c" ]; then
+					weather_info="${weather_info}°C"
+				elif [ "$TEMPERATURE_SCALE" == "f" ]; then
+					weather_info="${weather_info}°F"
+				else
+					weather_info="${weather_info}°?"
+				fi
+			fi
+		fi
+		echo -n "$weather_info" > $WEATHER_FILE
+		echo -n "$weather_info"
+	else
+		cat $WEATHER_FILE
+	fi
+else
+	cat $WEATHER_FILE
+fi
