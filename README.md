@@ -13,6 +13,8 @@ git clone git://github.com/heliomass/WeatherDan.git
 
 To see the full range of commands:
 
+## Usage
+
 ```shell
 weather_dan --help
 ```
