@@ -171,7 +171,7 @@ function get_weather() {
 	local __current_weather=
 
 	# Hit the Yahoo! Weather API.
-	wget "http://weather.yahooapis.com/forecastrss?w=${WOEID}&u=${TEMPERATURE_SCALE}" -O $__weather_data > /dev/null 2>&1
+	wget "https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20weather.forecast%20where%20woeid%20=%20${WOEID}%20and%20u%20=%20%27${TEMPERATURE_SCALE}%27&format=xml&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys" -O $__weather_data > /dev/null 2>&1
 
 	# Extract the temperature
 	__current_temp=$(cat $__weather_data | grep 'yweather:condition' | sed 's/^.*temp="//' | sed 's/".*$//')
