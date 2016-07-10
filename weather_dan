@@ -167,17 +167,21 @@ function get_weather() {
 
 	# Procedure variables
 	local __weather_data=$($MKTEMP_CMD)
-	local __current_temp=
-	local __current_weather=
+	local __current_temp='?'
+	local __current_weather='?'
 
 	# Hit the Yahoo! Weather API.
 	wget "https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20weather.forecast%20where%20woeid%20=%20${WOEID}%20and%20u%20=%20%27${TEMPERATURE_SCALE}%27&format=xml&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys" -O $__weather_data > /dev/null 2>&1
 
-	# Extract the temperature
-	__current_temp=$(cat $__weather_data | grep 'yweather:condition' | sed 's/^.*temp="//' | sed 's/".*$//')
+	if [ $? -eq 0 ]; then
 
-	# Extract the current weather conditions
-	__current_weather=$(cat $__weather_data | grep 'yweather:condition' | sed 's/^.*code="//' | sed 's/".*$//')
+		# Extract the temperature
+		__current_temp=$(cat $__weather_data | grep 'yweather:condition' | sed 's/^.*temp="//' | sed 's/".*$//')
+
+		# Extract the current weather conditions
+		__current_weather=$(cat $__weather_data | grep 'yweather:condition' | sed 's/^.*code="//' | sed 's/".*$//')
+
+	fi
 
 	eval $__return_temperature="'$__current_temp'"
 	eval $__return_weather_code="'$__current_weather'"
@@ -199,11 +203,11 @@ function get_weather_image() {
 	local __weather_icon=
 
 	case "$__weather_code" in
-		0) __weather_icon='⚠';;    # tornado
-		1) __weather_icon='⚠';;    # tropical storm
-		2) __weather_icon='⚠';;    # hurricane
-		3) __weather_icon='⚠';;    # severe thunderstorms
-		4) __weather_icon='☂';;    # thunderstorms
+		0) __weather_icon='🌀';;    # tornado
+		1) __weather_icon='🌀';;    # tropical storm
+		2) __weather_icon='🌀';;    # hurricane
+		3) __weather_icon='⚡';;    # severe thunderstorms
+		4) __weather_icon='⚡';;    # thunderstorms
 		5) __weather_icon='☂';;    # mixed rain and snow
 		6) __weather_icon='☂';;    # mixed rain and sleet
 		7) __weather_icon='☂';;    # mixed snow and sleet
@@ -216,27 +220,27 @@ function get_weather_image() {
 		14) __weather_icon='☃';;   # light snow showers
 		15) __weather_icon='☃';;   # blowing snow
 		16) __weather_icon='☃';;   # snow
-		17) __weather_icon='⚠';;   # hail
-		18) __weather_icon='⚠';;   # sleet
+		17) __weather_icon='❄';;   # hail
+		18) __weather_icon='❄';;   # sleet
 		19) __weather_icon='☁';;   # dust
 		20) __weather_icon='☁';;   # foggy
 		21) __weather_icon='☁';;   # haze
 		22) __weather_icon='☁';;   # smoky
 		23) __weather_icon='☁';;   # blustery
 		24) __weather_icon='☁';;   # windy
-		25) __weather_icon='⚠';;   # cold
+		25) __weather_icon='❄';;   # cold
 		26) __weather_icon='☁';;   # cloudy
-		27) __weather_icon='⚠';;   # mostly cloudy (night)
+		27) __weather_icon='☁';;   # mostly cloudy (night)
 		28) __weather_icon='☁';;   # mostly cloudy (day)
 		29) __weather_icon='☁';;   # partly cloudy (night)
 		30) __weather_icon='☁';;   # partly cloudy (day)
 		31) __weather_icon='☾';;   # clear (night)
-		32) __weather_icon='☼';;   # sunny
+		32) __weather_icon='☀';;   # sunny
 		33) __weather_icon='☾';;   # fair (night)
-		34) __weather_icon='☼';;   # fair (day)
+		34) __weather_icon='☀';;   # fair (day)
 		35) __weather_icon='☂';;   # mixed rain and hail
-		36) __weather_icon='☼';;   # hot
-		37) __weather_icon='☂';;   # isolated thunderstorms
+		36) __weather_icon='☀';;   # hot
+		37) __weather_icon='⚡';;   # isolated thunderstorms
 		38) __weather_icon='☂';;   # scattered thunderstorms
 		39) __weather_icon='☂';;   # scattered thunderstorms
 		40) __weather_icon='☂';;   # scattered showers
@@ -244,9 +248,9 @@ function get_weather_image() {
 		42) __weather_icon='☃';;   # scattered snow showers
 		43) __weather_icon='☃';;   # heavy snow
 		44) __weather_icon='☁';;   # partly cloudy
-		45) __weather_icon='☂';;   # thundershowers
+		45) __weather_icon='⚡';;   # thundershowers
 		46) __weather_icon='☃';;   # snow showers
-		47) __weather_icon='☂';;   # isolated thundershowers
+		47) __weather_icon='⚡';;   # isolated thundershowers
 		3200) __weather_icon='?';; # not available
 		*) __weather_icon='?';;    # unknown
 	esac
