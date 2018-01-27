@@ -67,6 +67,9 @@ function display_help() {
 		
 		--display_weather_code
 		   Shows the weather code, which is used to derive the weather icon
+
+		--cache_time
+		   Time to cache between server hits (defaults to $CACHE_TIME)
 		
 		--clear_cache
 		   Force an update from Yahoo! Weather.
@@ -113,6 +116,10 @@ while [ $# -gt 0 ]; do
 		--display_weather_code)
 			DISPLAY_WEATHER_CODE=1
 			shift
+			;;
+		--cache_time)
+			CACHE_TIME=$2
+			shift 2
 			;;
 		--clear_cache)
 			CLEAR_CACHE=1
