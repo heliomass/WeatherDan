@@ -202,6 +202,7 @@ function get_weather_image() {
 	# Procedure variables
 	local __weather_icon=
 
+	# Condition codes are taken from here: https://developer.yahoo.com/weather/documentation.html#codes
 	case "$__weather_code" in
 		0) __weather_icon='🌀';;    # tornado
 		1) __weather_icon='🌀';;    # tropical storm
