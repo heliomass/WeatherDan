@@ -16,7 +16,7 @@ STAT_EPOCH_CMD='stat -c "%Y"';     # Different platforms have different syntax f
 
 # Default the command arguments
 WOEID=;                            # Get your WOEID from http://woeid.rosselliot.co.nz
-CACHE_TIME=900;                    # Number of seconds to cache the weather
+CACHE_TIME=300;                    # Number of seconds to cache the weather
 WEATHER_FILE="$HOME/.weather_dan"; # Location to cache the temperature
 TEMPERATURE_SCALE='c';             # Either c or f
 DISPLAY_WEATHER=0;                 # Display the weather
