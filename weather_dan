@@ -27,37 +27,39 @@ export CLEAR_CACHE=0;                     # Clear the cached weather when runnin
 # Help
 function display_help() {
 
-	echo ''
-	echo "WeatherDan"
-	echo ''
-	echo "--woeid (compulsory argument)"
-	echo '   The woeid corresponding to the city you want to show the weather for.'
-	echo '   (visit http://woeid.rosselliot.co.nz to discover the one for your city)'
-	echo ''
-	echo "--cache_time (Defualt: $CACHE_TIME)"
-	echo '   How long to cache the weather report for in seconds.'
-	echo ''
-	echo "--weather_file (Default: $WEATHER_FILE)"
-	echo '   Location for the cache file.'
-	echo ''
-	echo "--temperature_scale (must be c or f. Default is $TEMPERATURE_SCALE)"
-	echo '   Whether to display in Celsius (c) or Fahrenheit (f)'
-	echo ''
-	echo "--display_weather"
-	echo '   Show the weather?'
-	echo ''
-	echo "--display_temperature"
-	echo '   Show the temperature?'
-	echo ''
-	echo "--display_temperature_unit"
-	echo '   Show the temperature unit along with the temperature?'
-	echo ''
-	echo "--clear_cache"
-	echo '   Force an update from Yahoo! Weather.'
-	echo ''
-	echo "--help"
-	echo '   Display this help screen.'
-	echo ''
+	cat <<-EOF
+		
+		WeatherDan
+		
+		--woeid (compulsory argument)
+		   The woeid corresponding to the city you want to show the weather for.
+		   (visit http://woeid.rosselliot.co.nz to discover the one for your city)
+		
+		--cache_time (Defualt: $CACHE_TIME)
+		   How long to cache the weather report for in seconds.
+		
+		--weather_file (Default: $WEATHER_FILE)
+		   Location for the cache file.
+		
+		--temperature_scale (must be c or f. Default is $TEMPERATURE_SCALE)
+		   Whether to display in Celsius (c) or Fahrenheit (f)
+		
+		--display_weather
+		   Show the weather?
+		
+		--display_temperature
+		   Show the temperature?
+		
+		--display_temperature_unit
+		   Show the temperature unit along with the temperature?
+		
+		--clear_cache
+		   Force an update from Yahoo! Weather.
+		
+		--help
+		   Display this help screen.
+		
+	EOF
 
 }
 
