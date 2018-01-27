@@ -11,19 +11,19 @@
 #
 
 # Don't change these!
-export MKTEMP_CMD='mktemp';               # Different platforms have different syntax for mktemp
-export STAT_EPOCH_CMD='stat -c "%Y"';     # Different platforms have different syntax for stat
+MKTEMP_CMD='mktemp';               # Different platforms have different syntax for mktemp
+STAT_EPOCH_CMD='stat -c "%Y"';     # Different platforms have different syntax for stat
 
 # Default the command arguments
-export WOEID=;                            # Get your WOEID from http://woeid.rosselliot.co.nz
-export CACHE_TIME=900;                    # Number of seconds to cache the weather
-export WEATHER_FILE="$HOME/.weather_dan"; # Location to cache the temperature
-export TEMPERATURE_SCALE='c';             # Either c or f
-export DISPLAY_WEATHER=0;                 # Display the weather
-export DISPLAY_TEMPERATURE=0              # Display the temperature
-export DISPLAY_TEMPERATURE_UNIT=0;        # 1 = show, 0 = don't show
-export DISPLAY_WEATHER_CODE=0;            # Display the weather code
-export CLEAR_CACHE=0;                     # Clear the cached weather when running
+WOEID=;                            # Get your WOEID from http://woeid.rosselliot.co.nz
+CACHE_TIME=900;                    # Number of seconds to cache the weather
+WEATHER_FILE="$HOME/.weather_dan"; # Location to cache the temperature
+TEMPERATURE_SCALE='c';             # Either c or f
+DISPLAY_WEATHER=0;                 # Display the weather
+DISPLAY_TEMPERATURE=0              # Display the temperature
+DISPLAY_TEMPERATURE_UNIT=0;        # 1 = show, 0 = don't show
+DISPLAY_WEATHER_CODE=0;            # Display the weather code
+CLEAR_CACHE=0;                     # Clear the cached weather when running
 
 # Help
 function display_help() {
