@@ -25,6 +25,17 @@ DISPLAY_TEMPERATURE_UNIT=0;        # 1 = show, 0 = don't show
 DISPLAY_WEATHER_CODE=0;            # Display the weather code
 CLEAR_CACHE=0;                     # Clear the cached weather when running
 
+# List of weather icons as variables
+WEATHER_ICON_STORM='🌀'
+WEATHER_ICON_LIGHTNING='⚡'
+WEATHER_ICON_UMBRELLA='☂'
+WEATHER_ICON_SNOWMAN='☃'
+WEATHER_ICON_SNOWFLAKE='❄'
+WEATHER_ICON_CLOUD='☁'
+WEATHER_ICON_SUN='☀'
+WEATHER_ICON_MOON='☾'
+WEATHER_ICON_UNKNOWN='?'
+
 # Help
 function display_help() {
 
@@ -213,56 +224,56 @@ function get_weather_image() {
 
 	# Condition codes are taken from here: https://developer.yahoo.com/weather/documentation.html#codes
 	case "$__weather_code" in
-		0) __weather_icon='🌀';;    # tornado
-		1) __weather_icon='🌀';;    # tropical storm
-		2) __weather_icon='🌀';;    # hurricane
-		3) __weather_icon='⚡';;    # severe thunderstorms
-		4) __weather_icon='⚡';;    # thunderstorms
-		5) __weather_icon='☂';;    # mixed rain and snow
-		6) __weather_icon='☂';;    # mixed rain and sleet
-		7) __weather_icon='☂';;    # mixed snow and sleet
-		8) __weather_icon='☂';;    # freezing drizzle
-		9) __weather_icon='☂';;    # drizzle
-		10) __weather_icon='☂';;   # freezing rain
-		11) __weather_icon='☂';;   # showers
-		12) __weather_icon='☂';;   # showers
-		13) __weather_icon='☃';;   # snow flurries
-		14) __weather_icon='☃';;   # light snow showers
-		15) __weather_icon='☃';;   # blowing snow
-		16) __weather_icon='☃';;   # snow
-		17) __weather_icon='❄';;   # hail
-		18) __weather_icon='❄';;   # sleet
-		19) __weather_icon='☁';;   # dust
-		20) __weather_icon='☁';;   # foggy
-		21) __weather_icon='☁';;   # haze
-		22) __weather_icon='☁';;   # smoky
-		23) __weather_icon='☁';;   # blustery
-		24) __weather_icon='☁';;   # windy
-		25) __weather_icon='❄';;   # cold
-		26) __weather_icon='☁';;   # cloudy
-		27) __weather_icon='☁';;   # mostly cloudy (night)
-		28) __weather_icon='☁';;   # mostly cloudy (day)
-		29) __weather_icon='☁';;   # partly cloudy (night)
-		30) __weather_icon='☁';;   # partly cloudy (day)
-		31) __weather_icon='☾';;   # clear (night)
-		32) __weather_icon='☀';;   # sunny
-		33) __weather_icon='☾';;   # fair (night)
-		34) __weather_icon='☀';;   # fair (day)
-		35) __weather_icon='☂';;   # mixed rain and hail
-		36) __weather_icon='☀';;   # hot
-		37) __weather_icon='⚡';;   # isolated thunderstorms
-		38) __weather_icon='☂';;   # scattered thunderstorms
-		39) __weather_icon='☂';;   # scattered thunderstorms
-		40) __weather_icon='☂';;   # scattered showers
-		41) __weather_icon='☃';;   # heavy snow
-		42) __weather_icon='☃';;   # scattered snow showers
-		43) __weather_icon='☃';;   # heavy snow
-		44) __weather_icon='☁';;   # partly cloudy
-		45) __weather_icon='⚡';;   # thundershowers
-		46) __weather_icon='☃';;   # snow showers
-		47) __weather_icon='⚡';;   # isolated thundershowers
-		3200) __weather_icon='?';; # not available
-		*) __weather_icon='?';;    # unknown
+		0) __weather_icon=$WEATHER_ICON_STORM;;      # tornado
+		1) __weather_icon=$WEATHER_ICON_STORM;;      # tropical storm
+		2) __weather_icon=$WEATHER_ICON_STORM;;      # hurricane
+		3) __weather_icon=$WEATHER_ICON_LIGHTNING;;  # severe thunderstorms
+		4) __weather_icon=$WEATHER_ICON_LIGHTNING;;  # thunderstorms
+		5) __weather_icon=$WEATHER_ICON_UMBRELLA;;   # mixed rain and snow
+		6) __weather_icon=$WEATHER_ICON_UMBRELLA;;   # mixed rain and sleet
+		7) __weather_icon=$WEATHER_ICON_UMBRELLA;;   # mixed snow and sleet
+		8) __weather_icon=$WEATHER_ICON_UMBRELLA;;   # freezing drizzle
+		9) __weather_icon=$WEATHER_ICON_UMBRELLA;;   # drizzle
+		10) __weather_icon=$WEATHER_ICON_UMBRELLA;;  # freezing rain
+		11) __weather_icon=$WEATHER_ICON_UMBRELLA;;  # showers
+		12) __weather_icon=$WEATHER_ICON_UMBRELLA;;  # showers
+		13) __weather_icon=$WEATHER_ICON_SNOWMAN;;   # snow flurries
+		14) __weather_icon=$WEATHER_ICON_SNOWMAN;;   # light snow showers
+		15) __weather_icon=$WEATHER_ICON_SNOWMAN;;   # blowing snow
+		16) __weather_icon=$WEATHER_ICON_SNOWMAN;;   # snow
+		17) __weather_icon=$WEATHER_ICON_SNOWFLAKE;; # hail
+		18) __weather_icon=$WEATHER_ICON_SNOWFLAKE;; # sleet
+		19) __weather_icon=$WEATHER_ICON_CLOUD;;     # dust
+		20) __weather_icon=$WEATHER_ICON_CLOUD;;     # foggy
+		21) __weather_icon=$WEATHER_ICON_CLOUD;;     # haze
+		22) __weather_icon=$WEATHER_ICON_CLOUD;;     # smoky
+		23) __weather_icon=$WEATHER_ICON_CLOUD;;     # blustery
+		24) __weather_icon=$WEATHER_ICON_CLOUD;;      # windy
+		25) __weather_icon=$WEATHER_ICON_SNOWFLAKE;;  # cold
+		26) __weather_icon=$WEATHER_ICON_CLOUD;;      # cloudy
+		27) __weather_icon=$WEATHER_ICON_CLOUD;;      # mostly cloudy (night)
+		28) __weather_icon=$WEATHER_ICON_CLOUD;;      # mostly cloudy (day)
+		29) __weather_icon=$WEATHER_ICON_CLOUD;;      # partly cloudy (night)
+		30) __weather_icon=$WEATHER_ICON_CLOUD;;      # partly cloudy (day)
+		31) __weather_icon=$WEATHER_ICON_MOON;;       # clear (night)
+		32) __weather_icon=$WEATHER_ICON_SUN;;        # sunny
+		33) __weather_icon=$WEATHER_ICON_MOON;;       # fair (night)
+		34) __weather_icon=$WEATHER_ICON_SUN;;        # fair (day)
+		35) __weather_icon=$WEATHER_ICON_UMBRELLA;;   # mixed rain and hail
+		36) __weather_icon=$WEATHER_ICON_SUN;;        # hot
+		37) __weather_icon=$WEATHER_ICON_LIGHTNING;;  # isolated thunderstorms
+		38) __weather_icon=$WEATHER_ICON_UMBRELLA;;   # scattered thunderstorms
+		39) __weather_icon=$WEATHER_ICON_UMBRELLA;;   # scattered thunderstorms
+		41) __weather_icon=$WEATHER_ICON_UMBRELLA;;   # scattered showers
+		41) __weather_icon=$WEATHER_ICON_SNOWMAN;;    # heavy snow
+		42) __weather_icon=$WEATHER_ICON_SNOWMAN;;    # scattered snow showers
+		43) __weather_icon=$WEATHER_ICON_SNOWMAN;;    # heavy snow
+		44) __weather_icon=$WEATHER_ICON_CLOUD;;      # partly cloudy
+		45) __weather_icon=$WEATHER_ICON_LIGHTNING;;  # thundershowers
+		46) __weather_icon=$WEATHER_ICON_SNOWMAN;;    # snow showers
+		47) __weather_icon=$WEATHER_ICON_LIGHTNING;;  # isolated thundershowers
+		3200) __weather_icon=$WEATHER_ICON_UNKNOWN;;  # not available
+		*) __weather_icon=$WEATHER_ICON_UNKNOWN;;     # unknown
 	esac
 
 	eval $__return_weather_icon="'$__weather_icon'"
