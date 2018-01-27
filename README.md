@@ -40,4 +40,4 @@ $ weather_dan --woeid 2459115 --display_weather --display_temperature --display_
 ☾ 40°F
 ```
 
-Get the woeid for your city [here](http://isithackday.com/geoplanet-explorer)
+Get the woeid for your city [here](http://developer.yahoo.com/weather)
