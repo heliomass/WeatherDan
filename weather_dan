@@ -321,9 +321,6 @@ if [ $? -eq 1 ]; then
 	get_weather temperature weather_code
 	get_weather_image $weather_code weather_icon
 	if [ -n "$temperature" ]; then
-		if [ $DISPLAY_WEATHER_CODE -eq 1 ]; then
-			weather_info="$weather_code "
-		fi
 		if [ $DISPLAY_WEATHER -eq 1 ]; then
 			weather_info=$weather_icon
 			if [ $DISPLAY_TEMPERATURE -eq 1 ]; then
