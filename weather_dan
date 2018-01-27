@@ -22,6 +22,7 @@ export TEMPERATURE_SCALE='c';             # Either c or f
 export DISPLAY_WEATHER=0;                 # Display the weather
 export DISPLAY_TEMPERATURE=0              # Display the temperature
 export DISPLAY_TEMPERATURE_UNIT=0;        # 1 = show, 0 = don't show
+export DISPLAY_WEATHER_CODE=0;            # Display the weather code
 export CLEAR_CACHE=0;                     # Clear the cached weather when running
 
 # Help
@@ -52,6 +53,9 @@ function display_help() {
 		
 		--display_temperature_unit
 		   Show the temperature unit along with the temperature?
+		
+		--display_weather_code
+		   Shows the weather code, which is used to derive the weather icon
 		
 		--clear_cache
 		   Force an update from Yahoo! Weather.
@@ -93,6 +97,10 @@ while [ $# -gt 0 ]; do
 			;;
 		--display_temperature_unit)
 			DISPLAY_TEMPERATURE_UNIT=1
+			shift
+			;;
+		--display_weather_code)
+			DISPLAY_WEATHER_CODE=1
 			shift
 			;;
 		--clear_cache)
@@ -302,7 +310,9 @@ if [ $? -eq 1 ]; then
 	get_weather temperature weather_code
 	get_weather_image $weather_code weather_icon
 	if [ -n "$temperature" ]; then
-		weather_info=""
+		if [ $DISPLAY_WEATHER_CODE -eq 1 ]; then
+			weather_info="$weather_code "
+		fi
 		if [ $DISPLAY_WEATHER -eq 1 ]; then
 			weather_info=$weather_icon
 			if [ $DISPLAY_TEMPERATURE -eq 1 ]; then
@@ -320,6 +330,9 @@ if [ $? -eq 1 ]; then
 					weather_info="${weather_info}°?"
 				fi
 			fi
+		fi
+		if [ $DISPLAY_WEATHER_CODE -eq 1 ]; then
+			weather_info="$weather_info (${weather_code})"
 		fi
 		echo -n "$weather_info" > $WEATHER_FILE
 		echo -n "$weather_info"
