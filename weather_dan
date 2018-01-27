@@ -16,7 +16,7 @@ export MKTEMP_CMD='mktemp';               # Different platforms have different s
 export STAT_EPOCH_CMD='stat -c "%Y"';     # Different platforms have different syntax for stat
 
 # Default the command arguments
-export WOEID=;                            # Get your WOEID from http://isithackday.com/geoplanet-explorer
+export WOEID=;                            # Get your WOEID from http://woeid.rosselliot.co.nz
 export CACHE_TIME=900;                    # Number of seconds to cache the weather
 export WEATHER_FILE="$HOME/.weather_dan"; # Location to cache the temperature
 export TEMPERATURE_SCALE='c';             # Either c or f
@@ -33,7 +33,7 @@ function display_help() {
 	echo ''
 	echo "--woeid (compulsory argument)"
 	echo '   The woeid corresponding to the city you want to show the weather for.'
-	echo '   (visit http://isithackday.com/geoplanet-explorer to discover the one for your city)'
+	echo '   (visit http://woeid.rosselliot.co.nz to discover the one for your city)'
 	echo ''
 	echo "--cache_time (Defualt: $CACHE_TIME)"
 	echo '   How long to cache the weather report for in seconds.'
@@ -112,7 +112,7 @@ done
 # Check all paramters were supplied.
 arg_error=0
 if [ -z $WOEID ]; then
-	echo 'Please supply --woeid (You can get your woeid from http://isithackday.com/geoplanet-explorer)' >&2
+	echo 'Please supply --woeid (You can get your woeid from http://woeid.rosselliot.co.nz)' >&2
 	arg_error=1
 fi
 if [ $DISPLAY_WEATHER -eq 0 -a $DISPLAY_TEMPERATURE -eq 0 ]; then
