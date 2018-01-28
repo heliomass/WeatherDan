@@ -47,9 +47,6 @@ function display_help() {
 		   The woeid corresponding to the city you want to show the weather for.
 		   (visit http://woeid.rosselliot.co.nz to discover the one for your city)
 		
-		--cache_time (Defualt: $CACHE_TIME)
-		   How long to cache the weather report for in seconds.
-		
 		--weather_file (Default: $WEATHER_FILE)
 		   Location for the cache file.
 		
@@ -87,10 +84,6 @@ while [ $# -gt 0 ]; do
 	case "$1" in
 		--woeid)
 			WOEID=$2
-			shift 2
-			;;
-		--cache_time)
-			CACHE_TIME=$2
 			shift 2
 			;;
 		--weather_file)
