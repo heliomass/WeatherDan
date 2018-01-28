@@ -150,7 +150,7 @@ if [ $arg_error -eq 1 ]; then
 fi
 
 if [ $CLEAR_CACHE -eq 1 ]; then
-	rm $WEATHER_FILE
+	rm -f $WEATHER_FILE
 fi
 
 # Dependencies
